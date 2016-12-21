@@ -1,0 +1,25 @@
+{% extends "admin/admin_layout.html.twig" %}
+{% block content %}
+
+    {% form_theme form 'fields.html.twig' %}
+
+
+    <div class="card card-block sameheight-item col-xl-8 col-lg-push-2">
+        <div class="title-block">
+            <h3 class="title text-sm-center">
+                New Product
+            </h3> </div>
+
+
+        {% include 'product/form.html.twig' %}
+
+        {{ form_rest(form) }}
+        <input type="submit" class="btn btn-primary" value="Save" />
+        {{ form_end(form) }}
+
+    </div>
+
+
+
+{% endblock %}
+

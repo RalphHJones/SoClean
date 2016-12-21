@@ -1,0 +1,11 @@
+delete_orderdetail:
+    path:  /order/delete-orderdetail/{id}
+    defaults:  { _controller: WebsitePublicBundle:Order:deleteOrderdetail }
+    requirements:
+        id: \d+ 
+
+update_orderdetail:
+    path:  /order/update-orderdetail/{id}
+    defaults:  { _controller: WebsitePublicBundle:Order:updateOrderdetail }
+    requirements:
+        id: \d+ 

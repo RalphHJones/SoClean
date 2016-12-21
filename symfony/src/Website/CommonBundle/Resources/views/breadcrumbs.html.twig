@@ -1,0 +1,18 @@
+{% block breadcrumbs %}
+    {% if trail|length() %}
+        <div id="breadcrumbs">
+            {% for crumb in trail %}
+                {% if not loop.last %}
+                    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                        <a itemprop="url" href="{{ crumb.url }}"><span itemprop="title">{{ crumb.title }}</span></a>
+                    </span>  &gt;
+                {% endif %}
+                {% if loop.last %}
+                    <span itemprop="title">{{ crumb.title }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+ 

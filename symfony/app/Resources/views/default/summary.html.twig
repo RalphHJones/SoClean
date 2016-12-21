@@ -1,0 +1,309 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet" id="bootstrap-css">
+
+    {% if order.isdiscount and setting('discount_amount_'~order.isdiscount) is not null %}
+        {% set discount = setting('discount_amount_'~order.isdiscount) %}
+    {% endif %}    
+
+    <input type="hidden" id="paymentType" value="{{ order.type }}" />
+    <input type="hidden" id="shippingMethod" value="{{ order.shippingmethod }}" />
+    <input type="hidden" id="shippingCharge3PayAdditionalProduct" value="{{ setting('3pay_shipping_charge_additional_product') }}" />
+    <input type="hidden" id="shippingChargeRushShippingAdditionalProduct" value="{{ setting('rush_shipping_charge_additional_product') }}" />
+ 
+    {% set orderTable %}
+        
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <td><strong>Item Name / SKU</strong></td>
+                    <td class="text-center"><strong>Item Price</strong></td>
+                    <td class="text-center"><strong>Tax</strong></td>
+                    <td class="text-center"><strong>Item Quantity</strong></td>
+                    <td class="text-center"><strong>Shipping</strong></td>
+                    <td class="text-right"><strong>Total</strong></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% set TotalShip = 0 %}
+                {% set TotalTax = 0 %}
+                {% set SubTotal = 0 %}
+                {% for detail in details %}
+                    <tr class="item" 
+                        data-is-discounted-product="{{ detail.product.isdiscount }}"
+                        data-update-orderdetail="{{ url('update_orderdetail', {'id': detail.id}) }}" 
+                        data-delete-orderdetail-url="{{ url('delete_orderdetail', {'id': detail.id}) }}" 
+                        data-id="{{ detail.id }}">
+                        <td>
+                            {% if order.transactionId is null %}
+                            <span class="editActions">
+                                <span title="Edit Row" class="editRow editAction">
+                                    <i class="fa fa-pencil icon"></i>
+                                    
+                                </span>
+                                <span title="Delete Row"  class="deleteRow editAction"> 
+                                    <i class="fa fa-remove icon"></i>
+                                </span>
+                            </span>
+                            <span style="display:none" title="Save Changes" class="saveRow editAction">
+                                 <i class="fa fa-save icon"></i>
+                            </span>
+                            {% endif %} 
+                           
+                            {{ detail.product.name }} - {{ detail.product.sku }} 
+                        </td>
+                        <td class="text-center">${{ "%.2f"|format(detail.price) }}</td>
+                        <td class="text-center"> {% if detail.tax != '0.00'%}{{ setting('tax_amount') * 100 }}% {% else %}0% {% endif %}</td>
+                        <td class="text-center"><span class="itemQuantity unique-field-quantityitem">{{ detail.qty }}</span></td> 
+                        <td class="text-center">$<span class="itemShipping unique-field-shippingitem">{{ "%.2f"|format(detail.shipping) }}</span></td>
+                        <td class="text-right">$<span class="unique-field-totalitem">{{ "%.2f"|format(detail.price * detail.qty ) }}</span></td>
+                    </tr>
+
+                    {% set TotalShip = TotalShip + detail.shipping %}
+                    {% if detail.tax != '0.00'%}
+                        {% set TotalTax = TotalTax + detail.qty * detail.price * setting('tax_amount') %}
+                    {% endif %}
+                    {% set SubTotal = SubTotal + detail.qty * detail.price %}
+                {% endfor %}
+
+                {% if discount is defined %}
+                    <tr>  
+                        <td>${{ discount }} Discount</td> 
+                        <td class="text-center">-${{ discount }} </td>
+                        <td class="text-center" colspan="">N/A</td>
+                         <td class="text-center" colspan="">N/A</td>
+                          <td class="text-center" colspan="">N/A</td>
+                        <td class="text-right" >-${{ discount }}</td>
+                    </tr>
+                {% endif %}
+               
+
+                <tr>
+                    <td class="highrow"></td>
+                    <td class="highrow"></td>
+                    <td class="highrow"></td>
+                    <td class="highrow"></td>
+                    <td class="highrow text-center"><strong>SubTotal</strong></td>
+                    <td class="highrow text-right">$<span class="field-subtotal">{{ "%.2f"|format(SubTotal) }}</span></td>
+                </tr>
+                {% if app.environment == 'dev'  %} <tr>
+                    <td class="emptyrow"></td>
+                    <td class="emptyrow"></td>
+                    <td class="emptyrow"></td>
+                    <td class="emptyrow"></td>
+                    <td class="emptyrow text-center"><strong>Total Tax</strong></td>
+                    <td class="emptyrow text-right">$<span class="field-tax">{{ "%.2f"|format(TotalTax) }}</span></td>
+                </tr> 
+                <tr>
+                    <td class="emptyrow"></td>
+                    <td class="emptyrow"></td>
+                    <td class="emptyrow"></td>
+                    <td class="emptyrow"></td>
+                    <td class="emptyrow text-center"><strong>Total Shipping</strong></td>
+                    <td class="emptyrow text-right">$<span class="field-shipping">{{ "%.2f" | format(TotalShip) }}</span></td>
+                </tr>
+                
+                {% endif %}
+
+                {% if discount is defined %}
+
+                    <tr>
+                      
+                        <td class="emptyrow" colspan="4"></td>
+                        <td class="emptyrow text-center"><strong>Discount</strong></td>
+                        <td class="emptyrow text-right">-${{ "%.2f" | format(discount) }}</td>
+                    </tr>
+
+                {% endif %} 
+                <tr>
+                    <td class="emptyrow " colspan="4"></td>
+             
+                    <td class="emptyrow  text-center"><strong>Total</strong></td>
+ 
+                    <td class="emptyrow  text-right">
+                        {% set totalCharge = order.ordertotal %}
+                            
+                        $<span class="field-total">{{ "%.2f" | format(totalCharge) }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endset %}   
+
+
+    <div class="container">
+      
+        
+        {% if not order.isdone %}
+            
+             {#{% if setting('summary_text_1') %}#}
+            {#<div class="card card-default">#}
+
+                {#<div class="card-block">#}
+                    {#<div {{ quick_edit('setting', 'summary_text_1') | raw }}>#}
+                        {#{{ setting('summary_text_1', {'customer_first_name': order.billingfirstname, 'total_charge': '<span class="field-total">' ~totalCharge ~'</span>'}) | raw }}#}
+                    {#</div>   #}
+                {#</div>#}
+            {#</div>#}
+            {#{% endif %}#}
+
+                    
+                    
+            <div class="card card-default">
+                <div class="card-block">
+                    {% if order.type =="3Pay" %} 
+        
+                        <div {{ quick_edit('setting', 'summary_text_2') | raw }}>
+                            {{ setting('summary_text_2', {
+                                    'customer_first_name':  order.billingfirstname, 
+                                    'total_charge': '<span class="field-total">' ~totalCharge ~'</span>',
+                                    'first_charge': '<span class="field-firstcharge">'~ order.payAmount(setting('first_payment_3pay'))[0] ~'</span>', 
+                                    'subsequent_charges': '<span class="field-subsequentcharges">'~order.payAmount(setting('first_payment_3pay'))[1] ~'</span>'
+                            }) | raw }}
+                        </div> 
+
+ 
+                    {% else %}
+
+                        <div {{ quick_edit('setting', 'summary_text_3') | raw }}>
+                            {{ setting('summary_text_3', {'customer_first_name': order.billingfirstname, 'total_charge': '<span class="field-total">' ~totalCharge ~'</span>'}) | raw }}
+                        </div> 
+
+
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <form method="POST">
+                        <input type="submit" class="btn btn-primary" value="Proceed"/>
+                        {{ form_rest(form) }}
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="text-center">
+                    {% if message is defined %}
+                        <div class="alert alert-warning"><i class="fa fa-check icon"></i>{{ message }}</div>
+                        {% endif %}
+                        {% if order.isdone %}
+                        <div class="alert alert-success"><i class="fa fa-check icon"></i>PAID</div>
+                    {% else %}
+
+                        <a href="{{ path("addproduct",{"id":order.id}) }}" class="btn btn-default pull-right" style="margin-right: 10px"><i class="fa fa-plus icon"></i> Add Product</a>
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 col-lg-3 pull-left">
+                        <div class="panel panel-default height">
+                            <div class="panel-heading">Billing Details</div>
+                            <div class="panel-body">
+                                <strong>{{ order.billingfirstname }} {{ order.billinglastname }}</strong><br>
+                                {{ order.billingaddress1 }}<br />
+                                {% if order.billingaddress2 %} {{ order.billingaddress2 }}<br /> {% endif %}
+                                {{ order.billingcity }}<br />
+                                {{ order.billingstate }}<br />
+                                {{ order.billingzip }}<br />
+                                {{ order.country }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="panel panel-default height">
+                            <div class="panel-heading">Payment Information</div>
+                            <div class="panel-body">
+                                <strong>Card Number:</strong> ***** {{ order.card_num|slice(order.card_num|length-3, order.card_num) }}<br>
+                                <strong>Exp Date:</strong> {{ order.card_exp_date }}<br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="panel panel-default height">
+                            <div class="panel-heading">Order Preferences</div>
+                            <div class="panel-body">
+                                <strong>Discount:</strong> {% if order.isdiscount %}Yes - ${{ discount }}{% else %}No{% endif %}<br>
+                                <strong>Type:</strong> {{ order.typeLabel }}<br>
+                                <strong>CPAP:</strong> {{ order.cpap }}<br>
+                                <strong>CPAP Comment:</strong> {{ order.cpapComment }}<br>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3 pull-right">
+                        <div class="panel panel-default height">
+                            <div class="panel-heading">Shipping Address</div>
+                            <div class="panel-body">
+                                <strong>{{ order.shippingfirstname }} {{ order.shippinglastname }}</strong><br>
+                                {{ order.shippingaddress1 }}<br>
+                                {% if order.shippingaddress2 %}  {{ order.shippingaddress2 }}<br> {% endif %}
+                                {{ order.shippingcity }}<br>
+                                {{ order.shippingstate }}<br>
+                                {{ order.shippingzip }}<br>
+                                {{ order.country }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="text-center"><strong>Order summary  - {% if order.isdone %}  {{ order.transactionId }} {% else %} Pending {% endif %}</strong></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            {{ orderTable  }}
+                        </div>
+                    </div>
+                </div>
+                        
+                 <a href="{{ path('homepage') }}" class="btn btn-success ">New Client <i class="fa fa-arrow-left icon"></i></a>   
+            </div>
+                        
+        </div>
+    </div>
+
+    <style>
+        .app{
+            padding-left: 0;
+        }
+        .height .panel-body{
+            min-height: 180px;
+        }
+
+
+        .table > tbody > tr > .emptyrow {
+            border-top: none;
+        }
+
+        .table > thead > tr > .emptyrow {
+            border-bottom: none;
+        }
+
+        .table > tbody > tr > .highrow {
+            border-top: 2px solid;
+        }
+        
+        .editAction  i{
+              font-size: 18px;
+              cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+            
+        }
+        .itemQuantity input, .itemShipping input {
+            border: 1px solid #CCC;
+            padding: 0 5px;
+            border-radius: 2px;
+            max-width: 70px;
+        } 
+        
+    </style>
+
+    
+{% endblock %}

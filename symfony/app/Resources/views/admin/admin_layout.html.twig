@@ -1,0 +1,148 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title> Administration </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="stylesheet" href="{{ asset("css/vendor.css") }}">
+    <!-- Theme initialization -->
+    <link rel="stylesheet" id="theme-style" href="{{ asset("css/app-green.css") }}">
+</head>
+
+<body>
+<div class="main-wrapper">
+<div class="app" id="app">
+<header class="header">
+    <div class="header-block header-block-collapse hidden-lg-up">
+        <button class="collapse-btn" id="sidebar-collapse-btn">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+
+    <div class="header-block header-block-nav">
+        <ul class="nav-profile">
+            <li class="profile dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                   aria-expanded="false">
+                    <div class="img"
+                         style="background-image: url('{{ asset("user.png") }}')"></div> <span
+                            class="name">
+    			      {{app.user.username}}
+    			    </span> </a>
+
+                <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <!--<a class="dropdown-item" href="#"> <i class="fa fa-user icon"></i> Profile </a>
+                    <a class="dropdown-item" href="#"> <i class="fa fa-bell icon"></i> Notifications </a>
+                    <a class="dropdown-item" href="#"> <i class="fa fa-gear icon"></i> Settings </a>-->
+                    <a class="dropdown-item" href="/"> <i class="fa fa-gear icon"></i> Go to site </a>
+                    <a class="dropdown-item" href="{{ path("fos_user_change_password") }}"> <i class="fa fa-user icon"></i> change password </a>
+
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ path("fos_user_security_logout") }}"> <i class="fa fa-power-off icon"></i> Logout </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</header>
+<aside class="sidebar">
+    <div class="sidebar-container">
+        <div class="sidebar-header">
+            <div class="brand">
+                <div class="logo"><span class="l l1"></span> <span class="l l2"></span> <span class="l l3"></span> <span
+                            class="l l4"></span> <span class="l l5"></span></div>
+                Administration
+            </div>
+        </div>
+        <nav class="menu">
+            <ul class="nav metismenu" id="sidebar-menu">
+                <!--<li>
+                    <a href=""> <i class="fa fa-home"></i> Dashboard </a>
+                </li>-->
+                <li class="open">
+                    <a href=""> <i class="fa fa-th-large"></i> Users <i class="fa arrow"></i> </a>
+                    <ul>
+                        <li><a href="{{ path('fos_user_registration_register') }}">
+                                Add Users
+                            </a></li>
+                        <li class=""><a href="/admin">
+                                Users List
+                            </a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{ path("see_transactions") }}"> <i class="fa fa-pencil-square-o"></i> Transactions </a>
+                </li>
+                <li>
+                    <a href="{{ path("products") }}"> <i class="fa fa-shopping-cart"></i> Products </a>
+                </li>                
+                <li>
+                    <a href="{{ path("admin_settings") }}"> <i class="fa fa-gear"></i> Settings </a>
+                </li>  
+            </ul>
+        </nav>
+    </div>
+</aside>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<article class="content items-list-page">
+    {% block content %}
+    {% endblock %}
+</article>
+{#
+<footer class="footer">
+
+    <div class="footer-block author">
+        <ul>
+            <li> created by <a href="#">Crawl3r</a></li>
+            <li><a href="#">get in touch</a></li>
+        </ul>
+    </div>
+</footer> #}
+
+<!-- /.modal -->
+<div class="modal fade" id="confirm-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"><i class="fa fa-warning"></i> Alert</h4></div>
+            <div class="modal-body">
+                <p>Are you sure want to do this?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="doit" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+</div>
+</div>
+
+
+
+{% block javascript %}				
+     {% javascripts combine=true output="js/scripts_admin.js" 
+             'js/vendor.js'
+              'js/app.js'
+
+     %} 
+
+     <script type="text/javascript" src="{{ asset(asset_url) }}"></script>
+     {% endjavascripts %}	
+ {% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+</body>
+
+</html>

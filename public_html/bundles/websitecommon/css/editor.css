@@ -1,0 +1,118 @@
+.cke_editable {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+}
+
+.cke_editable .contentTable td {
+    border: 1px solid #ccc;
+}
+.displayNone {
+    display: none;
+}
+
+.cke_wysiwyg_div .cke_widget_wrapper {
+    box-shadow: 0 0 1px #525252;
+}
+
+.text-style1 {
+    color: #d9534f;
+}
+
+.text-style2 {
+    background: #efefef;
+    margin-bottom: 15px;
+    color: black !important;
+    padding: 10px !important;
+}
+
+.text-style3 {
+    background: #DFF0D8;
+    border-color: #D6E9C6;
+    color: #5e755e;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding: 10px !important;
+
+}
+
+.text-style4 {
+    border: 1px solid #000;
+    padding: 5px;
+}
+.text-style5 {
+    padding: 5px;
+    background: #d46f6f;
+    padding: 10px;
+    color: #FFF;
+}
+
+.list-style1 li {
+    list-style: none;
+    font-size: 16px;
+    padding-left: 25px;
+    padding-bottom: 5px;
+}
+
+.span-style1 {
+    color: #d95375;
+    font-weight: bold;
+}
+
+.span-style2 {
+    color: #5369d9;
+    font-weight: bold;
+}
+
+.span-style3 {
+    color: #ffffff;
+    font-weight: bold;
+    background: #d25252;
+    padding: 2px 5px;
+}
+
+
+.span-style3 {
+    color: #ffffff;
+    font-weight: bold;
+    background: #d25252;
+    padding: 2px 5px;
+}
+
+
+
+
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0)); 
+    background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0)); 
+    background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0)); 
+    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0)); 
+}
+
+.quote {
+    padding: 10px 10px 0 10px;
+    background: #FFF;
+    border: 1px solid #CCC;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+.quote .by {
+    font-weight: bold;
+    margin-bottom: 5px;
+    border-bottom: 1px dotted #E6E6E6;
+    padding-bottom: 5px;
+
+}
+
+
+
+
+.heading-style1 {
+    color: #d9534f;
+}

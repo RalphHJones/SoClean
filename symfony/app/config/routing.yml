@@ -1,0 +1,22 @@
+app:
+    resource: "@UserBundle/Controller/"
+    type:     annotation
+    
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+admin_product:
+    resource: "@UserBundle/Resources/config/routing/product.yml"
+    prefix:  /admin
+
+
+website_admin:
+    resource: "@WebsiteAdminBundle/Resources/config/routing.yml"
+ 
+ 
+website_public:
+    resource: "@WebsitePublicBundle/Resources/config/routing.yml"
+ 
+ 
+ 
+ 

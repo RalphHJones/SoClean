@@ -1,0 +1,31 @@
+
+{% extends 'base.html.twig' %}
+
+{% block content %}
+{% if title is defined and message is defined %}
+    <div class="container">
+        <div class="card card-default">
+            <div class="card-header">
+                <div class="header-block">
+                    <p class="lead"> {{ title }} </p>
+                </div>
+            </div>
+            <div class="card-block">
+                {{ message| raw }}<br>
+                {% if success %}
+                <p>Ok, <b class="text-primary">{{ fname }}</b> , your order has been processed and your account will be charged within 1 to 2 business days.</p>
+                {% endif %}
+            </div>
+        </div>
+            
+         <a href="{{ path('homepage') }}" class="btn btn-success ">New Client <i class="fa fa-arrow-left icon"></i></a>    
+        <a href="" class="btn btn-success pull-right">Go to Summary page <i class="fa fa-arrow-right icon"></i></a>
+    </div>
+
+    <style>
+        .app{
+            padding-left: 0;
+        }
+    </style>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+<div {% if order is defined and order.type == '3Pay' %} style="display:none" {% endif %} class="paymentText payText1Pay">
+
+    {{ form_widget(form.isdiscount, { 'attr': {'class': '', 'placeholder': '' } }) }}
+
+    <div {{ quick_edit('setting', 'pre_step_text_5') | raw }}>
+        {{ setting('pre_step_text_5') | raw }}
+    </div>
+
+    {% if setting('discount_amount_1') is not null %}
+        <div class="form-group">
+            <label class="control-label">
+                <input id="discount30" value="1" data-value="{{ setting('discount_amount_1') }}" class="discountOption" {% if order is defined and  order.isdiscount == 1 %} checked="checked" {% endif %} type="checkbox" /> Apply ${{ setting('discount_amount_1') }} Discount & Free Shipping
+            </label>
+        </div>
+    {% endif %}
+
+    {% if setting('discount_amount_2') is not null %}
+        <div class="form-group">
+            <label class="control-label">
+                <input id="discount60" value="2" data-value="{{ setting('discount_amount_2') }}" class="discountOption" {% if order is defined and order.isdiscount == 2 %} checked="checked" {% endif %} type="checkbox" /> Apply ${{ setting('discount_amount_2') }} Discount
+            </label>
+        </div>
+    {% endif %}
+
+    {% if setting('discount_amount_3') is not null %}
+        <div class="form-group">
+            <label class="control-label">
+                <input id="refurb" value="3" data-id="{{refurb.id}}" data-name="{{refurb.name}}" data-value="{{refurb.price}}" class="discountOption" name="discountOption" {% if order is defined and order.isdiscount == 3 %} checked="checked" {% endif %} type="checkbox" /> Apply ${{ refurb.price }} Refurb
+            </label>
+        </div>
+    {% endif %}
+
+</div>

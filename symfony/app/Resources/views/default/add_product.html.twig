@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<div class="container">
+    <form autocomplete="off" method="POST">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="col-md-12">
+            <h3> <center>Add Product</center></h3>
+            <div class="form-group">
+                <label class="control-label">Choosen Product</label>
+                <select class="form-control" name="form[product]">
+                    {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }} - ${{ product.price }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Qte</label>
+                {{ form_widget(form.qte, {'attr': {'min': 0, 'max': 100, 'class': 'form-control underlined', 'placeholder': ''} }) }}
+            </div>
+            <div class="form-group">
+                <label class="control-label">Payment Type (This will replace your previous choice)</label>
+                <select class="form-control paymentTypes" name="form[type]">
+                        <option value="1Pay"> One-Time Payment </option>
+                        <option value="3Pay" {% if order.type== '3Pay' %}selected="selected" {% endif %}> 3 Month Subscription </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Shipping Total</label>
+                {{ form_widget(form.shipping_total, {'attr': {'class': 'form-control underlined floatNumber', 'placeholder': '' } }) }}
+            </div>
+            
+            Apply Discount to this Order ? <br/> <br /> 
+            {% include 'discount-form-block.html.twig' %}
+
+            <input type="submit" class="btn btn-primary btn-lg pull-right" value="Add" >
+        </div>
+    </div>
+    </form>
+</div>
+<style>
+    .app{
+        padding-left: 0;
+    }
+    </style>
+{% endblock %}

@@ -1,0 +1,512 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <div class="container">
+        {% if message %}
+            <div class="row col-md-offset-3">
+                <div class="alert alert-success col-md-8">
+                    <center>{{ message| raw }}</center>
+                </div>
+            </div>
+        {% endif %}
+        <div class="showTable">
+        </div>
+
+        <div class="stepwizard col-md-offset-3">
+            <div class="stepwizard-row setup-panel">
+                <div class="stepwizard-step">
+                    <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                    <p>Intro</p>
+                </div>
+                <div class="stepwizard-step">
+                    <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+                    <p>Pre-Steps</p>
+                </div>
+                <div class="stepwizard-step">
+                    <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+                    <p>Extras</p>
+                </div>
+
+                <div class="stepwizard-step">
+                    <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+                    <p>Billing</p>
+                </div>
+                <div class="stepwizard-step">
+                    <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
+                    <p>General</p>
+                </div>
+                <div class="stepwizard-step">
+                    <a href="#step-6" type="button" class="btn btn-default btn-circle" disabled="disabled">6</a>
+                    <p>Payment Details</p>
+                </div>
+                <div class="stepwizard-step">
+                    <a href="#step-7" type="button" class="btn btn-default btn-circle" disabled="disabled">7</a>
+                    <p>Shipping</p>
+                </div>
+                <div class="stepwizard-step">
+                    <a href="#step-8" type="button" class="btn btn-default btn-circle" disabled="disabled">8</a>
+                    <p>Final Transaction</p>
+                </div>
+            </div>
+        </div>
+
+        <form data-shipping-charge-threepay-additional-product="{{ setting('3pay_shipping_charge_additional_product') }}"
+              data-shipping-charge-rush-shipping="{{ setting('rush_shipping_charge_additional_product') }}"
+              data-first-payment-amount="{{ setting('first_payment_3pay') }}" 
+              
+              id="mainForm" autocomplete="off" role="form" method="post">
+{#{{ dump() }}#}
+            <div class="row setup-content" id="step-1">
+                <div class="col-md-6 col-md-offset-3 card sameheight-item">
+                    <div class="col-md-12 card-block">
+
+                        <div {{ quick_edit('setting', 'intro_text_1') | raw }}>
+                            {{ setting('intro_text_1') | raw }}
+                        </div>
+                        <input type="hidden" name="mainProduct" id="mainProduct" data-id="{{ products.id }}" data-name="{{ products.name }}" value="{{ products.price }}">
+                        <input type="hidden" name="subscriptionFirst" id="subscriptionFirst" value="{{ subscription.first }}">
+                        <input type="hidden" name="subscriptionSecond" id="subscriptionSecond" value="{{ subscription.second }}">
+
+                        <div class="form-group">
+                            <label class="control-label">Customer First Name</label>
+                            <input id="customder_fname" type="text" required="required" class="form-control underlined"/>
+                        </div>
+
+                        {% if setting('intro_text_2') %}
+                            <div {{ quick_edit('setting', 'intro_text_2') | raw }}>
+                                {{ setting('intro_text_2') | raw }}
+                            </div>    
+
+
+                            <div class="form-group">
+                                <label class="control-label">
+                                {{ form_widget(form.taxstate, {'attr': {'data-tax-percentage': setting('tax_amount')}}) }} Massachusetts</label>
+                            </div>
+
+                        {% endif %}
+
+                        <button id="goToPreSteps" class="btn btn-primary nextBtn btn-lg pull-right" type="submit">Next</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row setup-content" id="step-2" style="display: none;">
+                <div class="col-md-6 col-md-offset-3 card sameheight-item">
+                    <div class="col-md-12 card-block">
+                        <div {{ quick_edit('setting', 'pre_step_text_1') | raw }}>
+                            {{ setting('pre_step_text_1') | raw }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">CPAP</label>
+                            {{ form_widget(form.cpap) }}
+                        </div>
+
+                        <div {{ quick_edit('setting', 'pre_step_text_2') | raw }}>
+                            {{ setting('pre_step_text_2') | raw }}
+                        </div>  
+
+                        <div class="form-group">
+                            <label class="control-label">Comment</label>
+                            {{ form_widget(form.cpapComment, {'required':false,'attr': {'class': 'form-control underlined', 'placeholder': 'Comment' } }) }}
+                        </div>
+
+
+                        <div {{ quick_edit('setting', 'pre_step_text_3') | raw }}>
+                            {{ setting('pre_step_text_3') | raw }}
+                        </div>  
+
+                        <div class="form-group">
+                            <label class="control-label"> Type </label>
+
+                            <select class="form-control paymentTypes" name="form[type]">
+                                <option value="1Pay"> One-Time Payment </option>
+                                <option value="3Pay"> 3 Month Subscription </option>
+                            </select>
+                        </div>
+
+                        <div {{ quick_edit('setting', 'pre_step_text_3') | raw }}>
+                            {{ setting('pre_step_text_4') | raw }}
+                        </div>  
+
+                        {% include 'discount-form-block.html.twig' %}
+
+                        <button id="goToShipping" class="btn btn-primary  btn-lg pull-right" type="button" >Next</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row setup-content" id="step-3" style="display: none;">
+                <div class="col-md-6 col-md-offset-3 card sameheight-item">
+                    <div class="col-md-12 card-block">
+                        <h3>Extras</h3>
+
+                        {% for product in extra_products %}
+                            
+                            
+                           
+                            <h3>{{ product.name }}</h3> 
+                            
+                            {% set id =  'extras_text_'~loop.index  %}
+                            
+                            <div {{ quick_edit('setting', id) | raw }}>
+                                {{ setting(id, {'product_price': product.price}) | raw }}
+                            </div>      
+
+                            <div class="form-group">
+                                <label class="control-label">Qty:</label>
+                                <input id=extras_{{ product.name|slice(0,7) }} data-id="{{ product.id }}" data-name="{{ product.name }}" data-price="{{ product.price }}" type="number" data-price="{{ product.price }}" name="form[extras][{{ product.id }}]" value="0" max="100" min="0" class="form-control extraProduct underlined" />
+                            </div>
+
+                        {% endfor %}
+
+                        <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+
+                    </div>    
+                </div>          
+            </div>    
+
+            <div class="row setup-content" id="step-4" style="display: none;">
+                <div class="col-md-6 col-md-offset-3 card sameheight-item">
+                    <div class="col-md-12 card-block">
+
+                        <div {{ quick_edit('setting', 'billing_details_text_1') | raw }}>
+                            {{ setting('billing_details_text_1') | raw }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">And what is the zip code?</label>
+                            {{ form_widget(form.zip_code, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Billing Zip Code','pattern':'^[0-9]+$' } }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Ok, on what address do you receive your statement?</label>
+                            {{ form_widget(form.address1, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Billing Address 1' } }) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Apt or Suite?</label>
+                            {{ form_widget(form.address2, { 'required':false,'attr': {'class': 'form-control underlined', 'placeholder': 'Billing Address 2' } }) }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Billing First Name</label>
+                            {{ form_widget(form.first_name, { 'attr': {'class': 'form-control underlined cnameInput', 'placeholder': '' } }) }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Billing Last Name</label>
+                            {{ form_widget(form.last_name, { 'attr': {'class': 'form-control underlined', 'placeholder': '' } }) }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label"></label>
+                            {{ form_widget(form.city, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Billing City' } }) }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Now what city/state is that?</label>
+                            {{ form_widget(form.state, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Billing State' } }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Billing Country</label>
+                            {{ form_widget(form.country, { 'attr': {'class': 'form-control underlined', 'placeholder': '' } }) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Shipping Method</label>
+                            {{ form_widget(form.ship_method, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Shipping Method' } }) }}
+                        </div>
+                         <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button> 
+                    </div>
+                </div>
+            </div>
+                        
+          
+            <div class="row setup-content" id="step-5" style="display: none;">
+
+                <div class="col-md-6 col-md-offset-3 card sameheight-item">
+                    <div class="col-md-12 card-block">
+                        <h3> General Details</h3>
+
+                        <div class="form-group">
+                            <label class="control-label">Thank you! Can I get your phone number? <span class="text-warning">(Required)</span></label>
+                            {{ form_widget(form.phone, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Phone' } }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Great! And your email address? <span class="text-warning">(Required)</span></label>
+                            {{ form_widget(form.email_address, { 'required':true, 'attr': {'class': 'form-control underlined', 'placeholder': 'Email' } }) }}
+                        </div>
+
+                        <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row setup-content" id="step-6" style="display: none;">
+                <div class="col-md-6 col-md-offset-3 card sameheight-item">
+                    <div class="col-md-12 card-block">
+
+                        <div {{ quick_edit('setting', 'payment_details_text_0') | raw }}>
+                            {{ setting('payment_details_text_0') | raw }}
+                        </div>
+
+                        <div class="alert alert-success" role="alert" align="center" id="TypeChosen"></div>
+
+                        <div class="paymentText payText1Pay">    
+                            <div {{ quick_edit('setting', 'payment_details_1pay') | raw }}>
+                                {{ setting('payment_details_1pay', {
+                                        'total_charge': '<span class="totalCharge">total_charge</span>'
+                                 }) | raw }}
+                            </div>    
+                        </div>
+ 
+                        <div class="paymentText payText3Pay"  style="display:none"  >
+                            <div {{ quick_edit('setting', 'payment_details_3pay') | raw }}>
+                                {{ setting('payment_details_3pay', {
+                                        'total_charge': '<span class="totalCharge">total_charge</span>',
+                                        'first_charge': '<span class="firstCharge">first_charge</span>',
+                                        'subsequent_charges': '<span class="subsequentCharges">subsequent_charges</span>'
+                                 }) | raw }}
+                            </div>      
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Choosen Product</label>
+                            <select class="form-control" id="chosenProduct" name="form[product]">
+                                {% for product in products %}
+                                    <option {% if loop.first %}selected="selected" {% endif %} data-value="{{ product.price }}" value="{{ product.id }}">{{ product.name }} - ${{ product.price }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div {{ quick_edit('setting', 'payment_details_text_2') | raw }}>
+                                {{ setting('payment_details_text_2') | raw }}
+                            </div>
+                        </div>
+
+
+                        <!-- discounted product -->
+
+                        <div class="form-group">
+                            <label class="control-label">Qty</label>
+                            {{ form_widget(form.qte, { 'attr': {'class': 'form-control underlined', 'placeholder': '', 'data-id': discounted_products[0].id, 'data-name': discounted_products[0].name, 'data-price': discounted_products[0].price } }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Choose Discounted Product</label>
+                            <select id="discountedProduct" class="form-control" name="form[discounted_product]">
+                                {% for product in discounted_products %}
+                                    <option {% if loop.first %} selected="selected" {% endif %} data-value="{{ product.price }}" value="{{ product.id }}">{{ product.name }} - ${{ product.price }}</option>
+                                {% endfor %} 
+                            </select>
+                        </div>
+
+                        <!-- discounted product -->                            
+
+                        <div class="form-group col-md-12">
+                            <div {{ quick_edit('setting', 'payment_details_text_3') | raw }}>
+                                {{ setting('payment_details_text_3') | raw }}
+                            </div>  
+                        </div>
+
+                        <div class="form-group"> 
+                            <label class="control-label">Shipping Total</label>
+                            {{ form_widget(form.shipping_total, {'attr': { 'data-default-shipping-charge': '0.00', 'class': 'form-control underlined floatNumber', 'placeholder': '' } }) }}
+                        </div>  
+ 
+                        <div class="form-group col-md-12">
+                            <div {{ quick_edit('setting', 'payment_details_text_4') | raw }}>
+                                {{ setting('payment_details_text_4') | raw }}
+                            </div>  
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label"></label>
+                            {{ form_widget(form.card_number, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Card Number'} }) }}
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <p>Expiration date? <b class="text-warning">(Repeat back)</b></p>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Month</label>
+                            {{ form_widget(form.card_expiration_month, { 'attr': {'class': 'form-control underlined', 'placeholder': '' } }) }}
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Year</label>
+                            {{ form_widget(form.card_expiration_year, { 'attr': {'class': 'form-control underlined', 'placeholder': '' } }) }}
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <div {{ quick_edit('setting', 'payment_details_text_5') | raw }}>
+                                {{ setting('payment_details_text_5') | raw }}
+                            </div>  
+
+
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label"></label>
+                            {{ form_widget(form.card_code, { 'attr': {'class': 'form-control underlined', 'placeholder': 'CVV','pattern':'^[0-9]{3}$' } }) }}
+                        </div>
+
+                        <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+                        <button id="validateCreditCard" class="btn btn-primary-outline  pull-right" type="button">Validate Card</button>
+
+                        <div id="ccInfo"></div>
+                    </div>
+                </div>
+            </div>
+         <div class="row setup-content" id="step-7" style="display: none;">
+                <div class="col-md-6 col-md-offset-3 card sameheight-item">
+                    <div class="col-md-12 card-block">
+                        <h3> Shipping Details</h3>
+
+                        <div {{ quick_edit('setting', 'shipping_text_1') | raw }}>
+                            {{ setting('shipping_text_1') | raw }}
+                        </div>     
+                        
+                        <div class="form-group">
+                            <label class="control-label">Great, and is the shipping address  the same as the billing address ?</label>
+                            <input type="checkbox" id="same_shipping">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Great! What is your zip code? <span class="text-warning">(Repeat back)</span></label>
+                            {{ form_widget(form.ship_to_zip_code, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Zip Code','pattern':'^[0-9]+$' } }) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Okay, so that's in </label>
+                            {{ form_widget(form.ship_to_state, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Shipping State' } }) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Shipping First Name</label>
+                            {{ form_widget(form.ship_to_first_name, { 'attr': {'class': 'form-control underlined cnameInput', 'placeholder': 'First Name' } }) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Ok,  Can I get your Last Name?<span class="text-warning">(Repeat back)</span></label>
+                            {{ form_widget(form.ship_to_last_name, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Last Name' } }) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">And what is your street address? <span class="text-warning">(Repeat back)</span></label>
+                            {{ form_widget(form.ship_to_address1, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Shipping Address 1' } }) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Apt or Suite? <span class="text-warning">(Repeat back)</span></label>
+                            {{ form_widget(form.ship_to_address2, { 'required':false,'attr': {'class': 'form-control underlined', 'placeholder': 'Shipping Address 2' } }) }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Shipping City</label>
+                            {{ form_widget(form.ship_to_city, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Shipping City' } }) }}
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Shipping Country</label>
+                            {{ form_widget(form.ship_to_country, { 'attr': {'class': 'form-control underlined', 'placeholder': 'Shipping Country' } }) }}
+                        </div>
+
+                        <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+                        {#<button class="btn btn-success btn-lg pull-right" type="submit">Submit</button>#}
+                    </div>
+                </div>
+            </div>
+            <div class="row setup-content" id="step-8" style="display: none;">
+                <div class="col-md-6 col-md-offset-3 card sameheight-item">
+                    <div class="card card-default">
+                        <div class="card-block">
+                            <div class="showTable1">
+                            </div>
+
+                        </div>
+
+                        <button class="btn btn-success btn-lg pull-right" type="submit">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet" id="bootstrap-css">
+
+
+    <style>
+        .app{
+            padding-left: 0;
+        }
+        .stepwizard-step p {
+            margin-top: 10px;
+        }
+        .stepwizard-row {
+            display: table-row;
+        }
+        .stepwizard {
+            display: table;
+            width: 50%;
+            position: relative;
+        }
+        .stepwizard-step button[disabled] {
+            opacity: 1 !important;
+            filter: alpha(opacity=100) !important;
+        }
+        .stepwizard-row:before {
+            top: 14px;
+            bottom: 0;
+            position: absolute;
+            content: " ";
+            width: 100%;
+            height: 1px;
+            background-color: #ccc;
+            z-order: 0;
+        }
+        .stepwizard-step {
+            display: table-cell;
+            text-align: center;
+            position: relative;
+        }
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 15px;
+        }
+
+        .has-error .form-control.underlined {
+            background: #fff4f4;
+        }
+
+        #ccInfo.loading {
+            border:1px solid #6b6b6b;
+            background: #ffef76;
+            padding: 10px;
+            clear: both;
+        }
+
+        #ccInfo.error {
+            border: 1px solid red;
+            background: #fff4f4;
+            clear: both;
+            padding: 10px;
+        }
+
+        #ccInfo.success {
+            border: 1px solid green;
+            background: #f0fdf0;
+            padding: 10px;
+            clear: both;
+        }
+
+        #validateCreditCard {
+            margin-right: 20px;
+            margin-top: 6px;
+        }
+
+    </style>
+
+
+{% endblock %}

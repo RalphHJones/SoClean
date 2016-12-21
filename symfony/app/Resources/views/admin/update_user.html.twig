@@ -1,0 +1,41 @@
+{% extends "admin/admin_layout.html.twig" %}
+{%  block content %}
+    <div class="card card-block sameheight-item col-xl-8 col-lg-push-2">
+        <div class="title-block">
+            <h3 class="title text-sm-center">
+                Update User
+            </h3> </div>
+        <form method="post" role="form">
+
+
+
+            <div class="form-group"> <label class="control-label">Email</label>
+                {{ form_widget(form.email, { 'attr': {'class': 'form-control underlined', 'placeholder': '' } }) }}
+                {% if form_errors(form.email) %}
+                    <label class="alert-warning">Email already exist</label>
+                {% endif %}
+            </div>
+            <div class="form-group"> <label class="control-label">Username</label>
+                {{ form_widget(form.username, { 'attr': {'class': 'form-control underlined', 'placeholder': '' } }) }}
+                {% if form_errors(form.username) %}
+                    <label class="alert-warning">Username already used</label>
+                {% endif %}
+            </div>
+            <div class="form-group"> <label class="control-label">Password</label>
+                {{ form_widget(form.plainPassword, { 'attr': {'class': 'form-control underlined', 'placeholder': '' } }) }}
+                {% if form_errors(form.plainPassword)%}
+                    <label class="alert-warning"> Invalid password</label>
+                {% endif %}
+            </div>
+            <div class="form-group"> <label class="control-label">Active</label>
+                {{ form_widget(form.enabled, { 'attr': {'class': 'form-control' } }) }}
+            </div>
+
+            <div class="form-group"> <button type="submit" class="btn btn-primary">Submit</button></div>
+            {% if success %}
+                <div class="form-group"> {{ success }}</div>
+            {% endif %}
+            {{ form_rest(form) }}
+        </form>
+    </div>
+{% endblock %}

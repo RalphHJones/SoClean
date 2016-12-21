@@ -1,0 +1,151 @@
+{% extends "admin/admin_layout.html.twig" %}
+{% block content %}
+    <div class="title-search-block">
+        <div class="title-block">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="title">
+                        Transactions
+                        <form method="POST">
+                            <div class="form-group col-md-3">
+                                {{ form_widget(form.period, { 'attr': {'class': 'form-control underlined', 'placeholder': '' } }) }}
+                            </div>
+                            <input type="submit" class="btn btn-primary btn-sm rounded-s" value="Download csv">
+
+                        </form>
+
+                    </h3>
+                    <p class="title-description"> You have {{ transactions|length }} transactions on your database</p>
+                </div>
+            </div>
+        </div>
+        <!--<div class="items-search">
+            <form class="form-inline">
+                <div class="input-group"><input type="text" class="form-control boxed rounded-s"
+                                                placeholder="Search for..."> <span class="input-group-btn">
+                        <button class="btn btn-secondary rounded-s" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span></div>
+            </form>
+        </div>-->
+    </div>
+    <div class="card items">
+        <ul class="item-list striped">
+            <li class="item item-list-header hidden-sm-down">
+                <div class="item-row">
+                    <div class="item-col fixed item-col-check"><label class="item-check" id="select-all-items">
+
+                            <span>Id</span>
+                        </label></div>
+
+                        <div class="item-col item-col-header  item-col-title">
+
+                            <span>Authorize ID</span>
+                        </label></div>
+                    
+                    <div class="item-col item-col-header item-col-title">
+                        <div><span>Username</span></div>
+                    </div>
+                    <div class="item-col item-col-header item-col-author">
+                        <div class="no-overflow"><span>Amount</span></div>
+                    </div>
+                    <div class="item-col item-col-header">
+                        <div><span>Status</span></div>
+                    </div>
+                    <div class="item-col item-col-header item-col-date">
+                        <div><span>Date</span></div>
+                    </div>
+                    <div class="item-col item-col-header item-col-date">
+                        <div><span>Time</span></div>
+                    </div>
+                    
+                    <div class="item-col item-col-header item-col-date">
+                        <div><span>View</span></div>
+                    </div>                    
+                </div>
+            </li>
+            {% for transaction in transactions %}
+            <li class="item">
+                <div class="item-row">
+                    <div class="item-col fixed item-col-check"><label class="item-check" id="select-all-items">
+
+                            <span>{{ transaction.id }}</span>
+                        </label>
+                    
+                    
+                    </div>
+                        
+                    <div class="item-col  item-col-title">
+
+                            <span>{{ transaction.transactionId }}</span>
+                      
+                    
+                    
+                    </div>                
+                        
+                        
+                    <div class="item-col fixed pull-left item-col-title">
+                        <div class="item-heading">Name</div>
+                        <div>
+                            <a href="{{ path("summary",{"id":transaction.id}) }}" class="">
+                                <h4 class="item-title">
+                                    {{ transaction.user.username }}
+                                </h4></a>
+                        </div>
+                    </div>
+                    <div class="item-col item-col-author">
+                        <div class="item-heading">Amount</div>
+                        <div class="no-overflow">${{ transaction.ordertotal }}</div>
+                    </div> 
+                    <div class="item-col">
+                        <div class="item-heading">Status</div>
+                        <div class="no-overflow">{% if transaction.isdone %}PAID{% else %}PENDING{% endif %}</div>
+                    </div>
+                    <div class="item-col item-col-date">
+                        <div class="item-heading">Date</div>
+                        <div class="no-overflow"> {{ transaction.orderdate|date('Y-m-d') }}</div>
+                    </div>
+                    <div class="item-col item-col-date">
+                        <div class="item-heading">Time</div>
+                        <div class="no-overflow"> {{ transaction.ordertime|date('H:i:s') }}</div>
+                    </div>
+                     <div class="item-col item-col-date">
+                         <a target="_blank" href="{{ url('summary', {'id':transaction.id }) }}">Summary</a>
+                     </div>
+                </div>
+            </li>
+                 {% else %}
+                <li><center>Nothing here</center></li>
+            {% endfor %}
+
+        </ul>
+            
+            <div style="padding:10px 10px 0 10px;">{{ knp_pagination_render(transactions) }}</div>
+    </div>
+    <!--<nav class="text-xs-right">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="">
+                    Prev
+                </a></li>
+            <li class="page-item active"><a class="page-link" href="">
+                    1
+                </a></li>
+            <li class="page-item"><a class="page-link" href="">
+                    2
+                </a></li>
+            <li class="page-item"><a class="page-link" href="">
+                    3
+                </a></li>
+            <li class="page-item"><a class="page-link" href="">
+                    4
+                </a></li>
+            <li class="page-item"><a class="page-link" href="">
+                    5
+                </a></li>
+            <li class="page-item"><a class="page-link" href="">
+                    Next
+                </a></li>
+        </ul>
+    </nav>-->
+{% endblock %}

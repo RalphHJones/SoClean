@@ -1,0 +1,15 @@
+admin_settings:
+    path:  /settings/{category}/{page}
+    defaults:  { _controller: WebsiteAdminBundle:Setting:index, page: 1, category: '' }
+    requirements:
+        page: \d+ 
+
+
+admin_setting_update:
+     path: /setting/{id}/update
+     defaults: { _controller: WebsiteAdminBundle:Setting:update }
+     requirements: { _method: put|post }       
+
+admin_setting_edit:
+     path: /setting/{id}/edit
+     defaults: { _controller: WebsiteAdminBundle:Setting:edit }

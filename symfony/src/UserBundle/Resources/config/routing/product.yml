@@ -1,0 +1,19 @@
+products:
+    path:     /products
+    defaults: { _controller: "UserBundle:Product:index" }
+    methods:  GET
+
+product_new:
+    path:     /product/new
+    defaults: { _controller: "UserBundle:Product:new" }
+    methods:  [GET, POST]
+
+product_edit:
+    path:     /product/{id}/edit
+    defaults: { _controller: "UserBundle:Product:edit" }
+    methods:  [GET, POST]
+
+product_delete:
+    path:     /product/{id}/delete
+    defaults: { _controller: "UserBundle:Product:delete" }
+    methods:  DELETE

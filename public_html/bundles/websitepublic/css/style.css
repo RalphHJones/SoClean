@@ -1,0 +1,19 @@
+.quickEditMode .quickEdit:hover {
+    box-shadow: 0px 0px 1px #fff, 0px 0px 1px #bbb inset, 0px 0px 3px #000 inset;
+    cursor: pointer;
+    background: rgba(0,0,0,0.025);
+}
+.quickEditMode .quickEdit:hover:after{
+    content: "Edit ";
+    font-weight: bold;
+    font-style: italic;
+    position: absolute;
+    right: 0;
+}
+
+#quickEditToggle.active {
+    color: #99ffc7;
+}
+body span[data-edit-url] {
+    padding: 0 !important;
+}

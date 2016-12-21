@@ -1,0 +1,5 @@
+admin_settings:
+    resource: "@WebsiteAdminBundle/Resources/config/routing/settings.yml"
+    prefix:  /admin
+
+ 

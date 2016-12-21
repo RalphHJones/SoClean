@@ -1,0 +1,12 @@
+[11-Nov-2016 09:48:10 CST6CDT] PHP Fatal error:  Uncaught exception 'RuntimeException' with message 'Unable to create the Doctrine Proxy directory "/home/socleanu/symfony/var/cache/prod/doctrine/orm/Proxies".' in /home/socleanu/symfony/vendor/symfony/symfony/src/Symfony/Bridge/Doctrine/CacheWarmer/ProxyCacheWarmer.php:58
+Stack trace:
+#0 /home/socleanu/symfony/vendor/symfony/symfony/src/Symfony/Component/HttpKernel/CacheWarmer/CacheWarmerAggregate.php(48): Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer->warmUp('/home/socleanu/...')
+#1 /home/socleanu/symfony/var/bootstrap.php.cache(1630): Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate->warmUp('/home/socleanu/...')
+#2 /home/socleanu/symfony/var/bootstrap.php.cache(1410): Symfony\Component\HttpKernel\Kernel->initializeContainer()
+#3 /home/socleanu/symfony/var/bootstrap.php.cache(1441): Symfony\Component\HttpKernel\Kernel->boot()
+#4 /home/socleanu/public_html/app.php(18): Symfony\Component\HttpKernel\Kernel->handle(Object(Symfony\Component\HttpFoundation\Request))
+#5 {main}
+  thrown in /home/socleanu/symfony/vendor/symfony/symfony/src/Symfony/Bridge/Doctrine/CacheWarmer/ProxyCacheWarmer.php on line 58
+[11-Nov-2016 10:47:32 CST6CDT] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/socleanu/symfony/src/UserBundle/Entity/Orderdetails.php on line 132
+[11-Nov-2016 10:48:17 CST6CDT] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/socleanu/symfony/src/UserBundle/Entity/Orderdetails.php on line 132
+[17-Nov-2016 09:57:00 CST6CDT] PHP Fatal error:  Cannot redeclare class Website\CommonBundle\Controller\Controller in /home/socleanu/symfony/src/Website/AdminBundle/Controller/Controller.php on line 229
